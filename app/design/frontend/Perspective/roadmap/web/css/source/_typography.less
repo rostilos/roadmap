@@ -1,0 +1,45 @@
+#bogus {display: none;}
+
+& when(@media-common=true){
+    .lib-font-face(
+        @family-name: 'Vodafone',
+        @font-path: '@{baseDir}fonts/Vodafone',
+        @font-format: 'woff2',
+        @font-weight: normal,
+        @font-style: normal,
+        @font-display: swap,
+        @font-type: 'truetype'
+    );
+    .lib-font-face(
+        @family-name: 'Vodafone',
+        @font-path: '@{baseDir}fonts/Vodafone-Bold',
+        @font-format: 'woff2',
+        @font-weight: bold,
+        @font-style: normal,
+        @font-display: swap,
+        @font-type: 'truetype'
+    );
+    .lib-font-face(
+        @family-name: 'Vodafone',
+        @font-path: '@{baseDir}fonts/Vodafone-Light',
+        @font-format: 'woff2',
+        @font-weight: 300,
+        @font-style: normal,
+        @font-display: swap,
+        @font-type: 'truetype'
+    );
+    .lib-font-face(
+        @family-name: 'Vodafone',
+        @font-path: '@{baseDir}fonts/Vodafone-ExtraBold',
+        @font-format: 'woff2',
+        @font-weight: 800,
+        @font-style: normal,
+        @font-display: swap,
+        @font-type: 'truetype'
+    );
+    
+    .items{
+        .lib-list-reset-styles();
+    }
+   
+}

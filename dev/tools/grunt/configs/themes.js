@@ -50,5 +50,15 @@ module.exports = {
             'css/styles'
         ],
         dsl: 'less'
-    }
+    },
+    myTheme: {
+        area: 'frontend',
+        name: 'Perspective/roadmap',
+        locale: 'en_US',
+        files: [
+            'css/styles-m',
+            'css/styles-l'
+        ],
+        dsl: 'less'
+    },
 };
