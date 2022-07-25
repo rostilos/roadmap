@@ -18,7 +18,7 @@
                 </div>
                 <div class="animated-section__content">
                     <div class="animated-section__logo">
-                        <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/vodafone-logo.png'); ?>" alt="iphone">
+                        <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/vodafone-logo.svg'); ?>" alt="iphone">
                     </div>
                     <h3 class="animated-section__title">Переходьте на iPhone SE</h3>
                     <h4 class="animated-section__sub-title">З Vodafone це сила</h4>
@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="animated-section__row _grid-2-cols">
+            <div class="animated-section__row _grid-2-cols" data-animate-container="iphone-front-2" data-animate-pos="end">
                 <div class="animated-section__content">
                     <div class="animated-section__icon">
                         <img src="" alt="">
@@ -53,10 +53,14 @@
             </div>
 
             <div class="animated-section__row _grid-2-cols">
-                <div class="animated-section__icon _animate">
-                    <img src="" alt="">
+                <div class="animated-section__images" >
+                    <div data-animate-container="iphone-front-2" data-animate-pos="start" >
+                        <div data-animate-component="iphone-front-2" data-animation-rules="translate fade-in" class="animated-section__image animated-section__image--iphone-front-2">
+                            <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-front.png'); ?>" alt="iphone">
+                        </div>
+                    </div>
                 </div>
-                <div class="animated-section__content">
+                <div class="animated-section__content" >
                     <div class="animated-section__icon">
                         <i></i>
                     </div>

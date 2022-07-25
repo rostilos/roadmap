@@ -46,7 +46,6 @@ require(["jquery", "velocity"], ($) => {
         }
         // ================================================================
 
-
         /*
             Объявление переменных, которые в последующем будут содержать
             данные о местоположении начальной/конечной точки по осям X и Y,
@@ -62,6 +61,8 @@ require(["jquery", "velocity"], ($) => {
         let animationLenghtX;
         let deltaY;
         let deltaX;
+        const animationTreshold = 140;
+        
         function calculateStylesOnScroll() {
             /* Рассчёт начальных/конечных координат анимируемого элемента, а так же общего
                расстояния анимации элемента по осям + задаётся treshold ( расстояние по оси y
@@ -85,11 +86,9 @@ require(["jquery", "velocity"], ($) => {
                     "end"
                 ].getBoundingClientRect().x;
 
-            animationTreshold = 150;
             animationLenghtY = Math.abs(startPositionY - endPositionY);
             animationLenghtX = Math.abs(startPositionX - endPositionX);
             // =======================================================================================
-
             if (
                 startPositionY < animationTreshold &&
                 endPositionY > animationTreshold
@@ -108,11 +107,11 @@ require(["jquery", "velocity"], ($) => {
                     let transformRule = `translate(${deltaX}px , ${deltaY}px)`;
 
                     /* см. коммент выше, только в отношении скейла ( в конечной точке анимации
-                        итоговый скейл получается 1.25 ( 125% );
+                        итоговый скейл получается 1.25 ( 150% );
                     */
                     if (animationRulesArray.includes("scale")) {
                         transformRule += `scale(${
-                            1 + deltaY / animationLenghtY / 4
+                            1 + deltaY / animationLenghtY / 2
                         })`;
                     }
 
@@ -128,7 +127,8 @@ require(["jquery", "velocity"], ($) => {
             } else if (startPositionY < animationTreshold && endPositionY < 0) {
                 /* То же, что и условие выше, но немного изменены формулы 
                    для движения снизу-вверх
-                */ 
+                */
+
                 deltaY = animationLenghtY + endPositionY;
                 deltaX = (animationLenghtX * deltaY) / animationLenghtY;
 
@@ -139,7 +139,7 @@ require(["jquery", "velocity"], ($) => {
 
                     if (animationRulesArray.includes("scale")) {
                         transformRule += `scale(${
-                            1 + deltaY / animationLenghtY / 4
+                            1 + deltaY / animationLenghtY / 2
                         })`;
                     }
                     element.style.transform = transformRule;
@@ -151,16 +151,24 @@ require(["jquery", "velocity"], ($) => {
                     element.style.opacity = opacity;
                 }
                 // =======================================================================================
-            } else if (
-                animationRulesArray.includes("fade-out") &&
-                endPositionY > 0 &&
-                endPositionY < animationTreshold
-            ) {
-                let opacity = Math.abs(endPositionY / animationTreshold);
-                element.style.marginRight = `${
-                    (animationTreshold - endPositionY) * -5
-                }px`;
-                element.style.opacity = opacity;
+            } else if (endPositionY > 0 && endPositionY < animationTreshold) {
+                if (animationRulesArray.includes("fade-out")) {
+                    let opacity = Math.abs(endPositionY / animationTreshold);
+                    element.style.marginRight = `${
+                        (animationTreshold - endPositionY) * -5
+                    }px`;
+                    element.style.opacity = opacity;
+                }
+                if (animationRulesArray.includes("fade-in")) {
+                    let opacity =
+                        (animationTreshold - Math.abs(endPositionY)) /
+                        animationTreshold;
+                    let right =
+                        (Math.abs(endPositionY) / animationTreshold) * 100;
+
+                    element.style.opacity = opacity < 0.15 ? 0 : opacity;
+                    element.style.transform = `translateX(-${right}%)`;
+                }
             } else {
                 /*
                     смещение элемента к "стандартному" положению.
@@ -172,6 +180,29 @@ require(["jquery", "velocity"], ($) => {
         }
 
         calculateStylesOnScroll();
+
+        /*
+            В целях улучшения производительности прослушиватели событий
+            для элементов, которые находятся вне видимой области 
+            удаляются.
+        */
+        // function onEntry(entry) {
+        //     let element = entry[0];
+        //     if (element.isIntersecting) {
+        //         window.addEventListener("scroll", function () {
+        //             calculateStylesOnScroll();
+        //         });
+        //     } else {
+        //         window.removeEventListener("scroll", function () {
+        //             calculateStylesOnScroll();
+        //         });
+        //     }
+        // }
+        
+        // let options = { threshold: 0 };
+        // let observer = new IntersectionObserver(onEntry, options);
+
+        // observer.observe(element);
         window.addEventListener("scroll", function () {
             calculateStylesOnScroll();
         });
