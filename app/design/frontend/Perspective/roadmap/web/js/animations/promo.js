@@ -42,7 +42,7 @@ require(["jquery", "velocity"], ($) => {
     const animatedElements = document.querySelectorAll(
         "[data-animate-component]"
     );
-    Array.from(animatedElements).forEach((element, index) => {
+    Array.from(animatedElements).forEach((element) => {
         const { animateComponent, animationRules } = element.dataset;
         /* достаём из дата-атрибута правила анимации для текущего элемента, сплитим 
            в массив, дабы не плодить кучу дата-атрибутов, но сохранить возможность в
@@ -230,7 +230,6 @@ require(["jquery", "velocity"], ($) => {
         запихнуть проверку на наличие правила анимации в switch-case и не плодить кучу if-else)
     */
     function checkIsArrayIncludesRule(rulesArray, term) {
-        console.table(rulesArray, term, rulesArray.includes(term));
         return !!rulesArray.includes(term);
     }
 });
