@@ -1,4 +1,4 @@
-require(["jquery", "velocity"], ($) => {
+require([],() => {
     /*
         В html разметке начальные и конечные точки для анимации помечены с помощью дата-атрибутов
         data-animate-container и data-animate-pos, data-animate-container в значении содержит имя
@@ -12,17 +12,28 @@ require(["jquery", "velocity"], ($) => {
         рассчёт координат по X и Y осям между этими двумя точками и в зависимости от положения при скролле меняют стили
         через style атрибут.
 
+        Константы, которые задаются ч-з конфиг :
+        * animationTreshold - ( расстояние по оси y
+                              сверху начальной точки анимируемого элемента + указанное 
+                              расстояние в пикселях, с этой точки запустится анимация ).
+        * scaleRatio - коеффициент скейла 
+        * reverseScaleRatio - коеффициент скейла ( реверс )
+        
         Правила анимации, которые задаются ч-з html атрибут data-animation-rules ч-з пробел :
 
         * translate - элемент будет передвигаться при скролле сверху-вниз
-        * translate-reverse - элемент будет передвигаться при скролле снизу-вверх 
         * scale - элемент по ходу передвижения будет увеличиваться в р-ре
         * scale-reverse - элемент по ходу передвижения будет уменьшаться в р-ре
         * fade-out - при достижении конечной конечной точки анимации при дальнейшем скролле прозрачность элемента будет
                      уменьшаться и элемент будет смещаться к правому краю
         * fade-in- при достижении конечной конечной точки анимации при дальнейшем скролле прозврачность элемента будет
                      увеличиваться
-     */
+         */
+
+    const animationTreshold =140;
+    const scaleRatio = 1.5;
+    const reverseScaleRatio = 3;
+
     const animatedElementsContainers = document.querySelectorAll(
         "[data-animate-container]"
     );
@@ -43,12 +54,12 @@ require(["jquery", "velocity"], ($) => {
         "[data-animate-component]"
     );
     Array.from(animatedElements).forEach((element) => {
-        const { animateComponent, animationRules } = element.dataset;
         /* достаём из дата-атрибута правила анимации для текущего элемента, сплитим 
            в массив, дабы не плодить кучу дата-атрибутов, но сохранить возможность в
            последующем добавлять/изменять кол-во/вид анимаций на странице с помощью
            дата-атрибутов в html без редактирования js кода
         */
+        const { animateComponent, animationRules } = element.dataset;
         let animationRulesArray;
 
         if (animationRules) {
@@ -61,9 +72,7 @@ require(["jquery", "velocity"], ($) => {
             данные о местоположении начальной/конечной точки по осям X и Y,
             общую "длину анимации" в пикселях по обеим осям ( нужно для вычисления 
             процентного значения "завершенности" анимации ), и разницу в координатах между
-            текущим положением и общей "длиной" анимации. Также задаётся treshold ( расстояние по оси y
-            сверху начальной точки анимируемого элемента + указанное расстояние в пикселях,
-            с этой точки запустится анимация ).
+            текущим положением и общей "длиной" анимации.
         */
         let startPositionY;
         let endPositionY;
@@ -73,12 +82,11 @@ require(["jquery", "velocity"], ($) => {
         let animationLenghtX;
         let deltaY;
         let deltaX;
-        const animationTreshold = 140;
 
         /*
-            функция для обработки скролла, запускается также 1 раз при инциализации
+            функция для инициализации данных о текущих координатах анимируемого элемента в момент скролла
         */
-        function calculateStylesOnScroll() {
+        function calculatePosValues() {
             /* Рассчёт начальных/конечных координат анимируемого элемента, а так же общего
                расстояния анимации элемента по осям 
             */
@@ -101,7 +109,12 @@ require(["jquery", "velocity"], ($) => {
 
             animationLenghtY = Math.abs(startPositionY - endPositionY);
             animationLenghtX = Math.abs(startPositionX - endPositionX);
-
+        }
+        /*
+            функция для обработки скролла, запускается также 1 раз при инциализации
+        */
+        function calculateStylesOnScroll() {
+            calculatePosValues();
             // константы для определения того, началась ли анимация, и завершилась ли анимация ( это нужно в дальнейшем для
             // понимания того, в какой момент начинать/заканчивать производить вычисления в изменениях стилей анимируемого элемента)
             const isStartAnimationPointReached =
@@ -124,38 +137,26 @@ require(["jquery", "velocity"], ($) => {
                 */
                 deltaX = (animationLenghtX * deltaY) / animationLenghtY;
 
-                if (
-                    animationRulesArray.includes("translate") &&
-                    endPositionY > animationTreshold
-                ) {
-                    let transformRule = `translate(${deltaX}px , ${deltaY}px)`;
+                if (animationRulesArray.includes("translate")) {
+                    let transformRule;
+
+                    if (endPositionY > animationTreshold) {
+                        transformRule = `translate(${deltaX}px , ${deltaY}px)`;
+                    } else if (endPositionY < 0) {
+                        transformRule = `translate(${
+                            isNaN(deltaX) ? 0 : deltaX
+                        }px , ${deltaY}px)`;
+                    }
 
                     /* см. коммент выше, только в отношении скейла ( в конечной точке анимации
-                        итоговый скейл получается 1.5 ( 150% );
+                        итоговый скейл получается равным константе scaleRatio ;
                     */
                     if (animationRulesArray.includes("scale")) {
                         transformRule += `scale(${
-                            1 + deltaY / animationLenghtY / 2
+                            1 + (deltaY / animationLenghtY) * (scaleRatio - 1)
                         })`;
                     }
 
-                    element.style.transform = transformRule;
-                    element.style.opacity = 1;
-                    element.style.marginRight = 0;
-                }
-                if (
-                    animationRulesArray.includes("translate-reverse") &&
-                    endPositionY < 0
-                ) {
-                    let transformRule = `translate(${
-                        isNaN(deltaX) ? 0 : deltaX
-                    }px , ${deltaY}px)`;
-
-                    if (animationRulesArray.includes("scale")) {
-                        transformRule += `scale(${
-                            1 + deltaY / animationLenghtY / 2
-                        })`;
-                    }
                     element.style.transform = transformRule;
                     element.style.opacity = 1;
                     element.style.marginRight = 0;
@@ -192,6 +193,7 @@ require(["jquery", "velocity"], ($) => {
                 }
             }
         }
+
         calculateStylesOnScroll();
 
         window.addEventListener("scroll", function () {
@@ -201,8 +203,8 @@ require(["jquery", "velocity"], ($) => {
 
     /*
         смещение элемента к "стандартному" положению.
-        Добавлено из-за того, что прослушиватель скролла в крайних положениях
-        выдаёт неточные значения
+        Добавлено из-за того, что прослушиватель скролла при быстром скролле 
+        в крайних положениях выдаёт неточные значения
     */
     function resetStylesToInitValues(element) {
         element.style = "";
@@ -210,8 +212,8 @@ require(["jquery", "velocity"], ($) => {
 
     /*
         смещение элемента к "крайнему" положению анимации.
-        Добавлено из-за того, что прослушиватель скролла в крайних положениях
-        выдаёт неточные значения
+        Добавлено из-за того, что прослушиватель скролла при быстром скролле 
+        в крайних положениях выдаёт неточные значения
     */
     function setExtremeAnimatedElPosition(element, stylesArray) {
         switch (true) {
