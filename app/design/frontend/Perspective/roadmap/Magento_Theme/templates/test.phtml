@@ -1,21 +1,25 @@
-<div class="promo" data-mage-init='{"promoAnimations" : {}}'>
+<div class="promo" data-mage-init='{"promoAnimations" : {"animationTreshold" : 140, "scaleRatio" : 1.5, "reverseScaleRatio" : 3}}'>
     <section class="promo__animated-section animated-section" data-section="animate-section">
         <div class="animated-section__container _container">
             <div class="animated-section__row _grid-2-cols">
                 <div class="animated-section__images">
+                    <!-- Конечная точка анимации при скролле для элемента iphone-front -->
                     <div class="animated-section__image-placeholder animated-section__image-placeholder--iphone-front" data-animate-container="iphone-front" data-animate-pos="end"></div>
                     <div data-animate-container="iphone-back" data-animate-pos="start">
                         <div data-animate-component="iphone-back" data-animation-rules="translate scale fade-out" class="animated-section__image  ">
                             <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-back.png'); ?>" alt="iphone">
                         </div>
                     </div>
+                    <!-- Начальная точка анимации при скролле для элемента iphone-front -->
                     <div data-animate-container="iphone-front" data-animate-pos="start">
-                        <div data-animate-component="iphone-front" data-animation-rules="translate-reverse" class="animated-section__image animated-section__image--second">
+                        <div data-animate-component="iphone-front" data-animation-rules="translate" class="animated-section__image animated-section__image--second">
                             <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-front.png'); ?>" alt="iphone">
                         </div>
                     </div>
 
+
                 </div>
+
                 <div class="animated-section__content">
                     <div class="animated-section__logo">
                         <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/vodafone-logo.svg'); ?>" alt="iphone">
@@ -38,12 +42,15 @@
                 <div class="animated-section__arrow">
                     <i></i>
                 </div>
+
             </div>
 
             <div class="animated-section__row _grid-2-cols" data-animate-container="iphone-front-2" data-animate-pos="end">
                 <div class="animated-section__content">
                     <div class="animated-section__icon">
                         <img src="" alt="">
+                        <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/camera-shutter.svg'); ?>" alt="camera-shutter">
+
                     </div>
                     <h3 class="animated-section__title">Найкраща камера</h3>
                     <p class="animated-section__text">Ширококутна камера 12 Мп з портретним режимом, портетним освітленням, функцією "Глибина", технологією Smart HRD нового поколыння ы пыдтримкою выдео 4К</p>
@@ -53,32 +60,31 @@
             </div>
 
             <div class="animated-section__row _grid-2-cols">
-                <div class="animated-section__images" >
-                    <div data-animate-container="iphone-front-2" data-animate-pos="start" >
+                <div class="animated-section__images">
+                    <div data-animate-container="iphone-front-2" data-animate-pos="start">
                         <div data-animate-component="iphone-front-2" data-animation-rules="translate fade-in" class="animated-section__image animated-section__image--iphone-front-2">
                             <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-front.png'); ?>" alt="iphone">
                         </div>
                     </div>
                 </div>
-                <div class="animated-section__content" >
+                <div class="animated-section__content">
                     <div class="animated-section__icon">
-                        <i></i>
+                        <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/screen-size-icon.svg'); ?>" alt="camera-shutter">
+
                     </div>
                     <h3 class="animated-section__title">HD Retina Дисплей</h3>
                     <p class="animated-section__text">Дисплей Retina HD 4.7" забезпечує яскраві і глибокі відчуття від перегляду зображення та відео</p>
                 </div>
             </div>
 
-            <div class="animated-section__row">
-                <div class="animated-section__icon _animate">
-                    <img src="" alt="">
-                </div>
+            <div class="animated-section__row animated-section__row--centered-content">
+
                 <div class="animated-section__content">
-                    <div class="animated-section__icon">
-                        <i></i>
+                    <div class="animated-section__image">
+                        <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/A14-Bionic.png'); ?>" alt="camera-shutter" />
                     </div>
                     <h3 class="animated-section__title">
-                        Потужний процесор BIONIC 13
+                        Потужний процесор BIONIC 14
                     </h3>
                     <p class="animated-section__text">
                         A13 Bionic - найшвидший та потужний процесор iPhone, з системою Neural Engine 3-го покоління. Забезпечує максимальну продустивність для додатків, ігор і фотозйомки
@@ -133,4 +139,16 @@
             </div>
         </div>
     </section>
+
+    <!-- Диагональные полосы на заднем фоне, которые в дальнейшем анимируются при скролле -->
+    <div class="bg-stripes">
+        <!-- Конечная точка анимации при скролле для элемента bg-stripe-1 -->
+        <div class="bg-stripe-1" data-animate-container="bg-stripe-1" data-animate-pos="end">
+
+        </div>
+        <!-- Начальная точка анимации при скролле для элемента bg-stripe-1 -->
+        <div class="bg-stripe-1" data-animate-container="bg-stripe-1" data-animate-pos="start">
+            <div data-animate-component="bg-stripe-1" data-animation-rules="translate"></div>
+        </div>
+    </div>
 </div>
