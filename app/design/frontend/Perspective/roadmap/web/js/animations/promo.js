@@ -1,13 +1,6 @@
 define([], () => {
     return (config) => {
         /*
-        В html разметке начальные и конечные точки для анимации помечены с помощью дата-атрибутов
-        data-animate-container и data-animate-pos, data-animate-container в значении содержит имя
-        анимируемого элемента, data-animate-pos - является ли контейнер начальной/конечной точкой
-        анимации элемента. В коде ниже Всё собирается в объект animatedElementsPositions, где ключ - 
-        имя анимируемого элемента, значение - еще один объект с ключами start и end, значения - ссылка 
-        на html элемент, который соответствует начальной/конечной точке анимации.
-
         Вся анимация для скролла схематически работает так : есть 2 html элемента, которые с помощью дата-атрибутов
         устанавливаются начальными/конечными точками для положения анимируемого элемента при скролле. Все последующие методы осуществляют
         рассчёт координат по X и Y осям между этими двумя точками и в зависимости от положения при скролле меняют стили
@@ -27,12 +20,23 @@ define([], () => {
         * animationTreshold - ( расстояние по оси y
                               сверху начальной точки анимируемого элемента + указанное 
                               расстояние в пикселях, с этой точки запустится анимация ).
-        * scaleRatio - коеффициент скейла         
+        * scaleRatio - коеффициент скейла    
+        * scaleRatioReverse - коеффициент, указывающий от какого значения скейл будет уменьшаться до 1-го при анимации
+                              уменьшения элемента     
          */
 
         const animationTreshold = config.animationTreshold ?? 140;
         const scaleRatio = config.scaleRatio ?? 1.5;
+        const scaleRationReverse = config.scaleRationReverse ?? 2;
 
+        /*  
+            Достаём из html разметки все элементы, которые являются конечными/начальными точками анимации
+            для определённого элемента анимации. В дальнейшем перебираем полученную
+            коллекцию элементов, преобразованную в массив.
+            С помощью деструктуризации вытаскиваем из датасета заранее заданные значения дата-атрибутов 
+            animateContainer, animatePos, и выставляем их в кач-ве ключей объекта animatedElementsPositions, значение
+            по ключу - ссылка на html элемент, который выступает в кач-ве конечной/начальной точки анимации.
+        */
         const animatedElementsContainers = document.querySelectorAll(
             "[data-animate-container]"
         );
@@ -49,6 +53,12 @@ define([], () => {
         });
         //=======================================================================================================
 
+        /*  
+            Достаём из html разметки все элементы, для которых будет задаваться анимация при скролле
+            (все элементы с дата-атрибутом [data-animate-component]), в дальнейшем перебираем полученную
+            коллекцию элементов, преобразованную в массив, на элементы 
+            вешаем обработчик скролла с ф-цией для рассчёта стилей анимируемого элемента в кач-ве коллбека.
+        */
         const animatedElements = document.querySelectorAll(
             "[data-animate-component]"
         );
@@ -94,53 +104,6 @@ define([], () => {
                     endPositionY - animationTreshold < 0;
 
                 // =======================================================================================
-                if (isStartAnimationPointReached) {
-                    deltaY =
-                        endPositionY > animationTreshold
-                            ? animationLenghtY -
-                              endPositionY +
-                              animationTreshold
-                            : Math.min(0, animationLenghtY + endPositionY);
-
-                    /*
-                    (animationLenghtX * deltaY) / animationLenghtY - в итоге даёт процентную величину "завершенности" 
-                    анимации на основании этой величины можно рассчитывать deltaX для процентного смещения
-                    анимируемого элемента по оси X пропорционально пройденному растоянию по оси Y
-                    от начала до конца анимации. В итоге получается движение элемента по диагонали
-                */
-                    deltaX = (animationLenghtX * deltaY) / animationLenghtY;
-
-                    if (animationRulesArray.includes("translate")) {
-                        let transformRule;
-
-                        if (endPositionY > animationTreshold) {
-                            transformRule = `translate(${deltaX}px , ${deltaY}px)`;
-                        } else if (endPositionY < 0) {
-                            transformRule = `translate(${
-                                isNaN(deltaX) ? 0 : deltaX
-                            }px , ${deltaY}px)`;
-                        }
-
-                        /* см. коммент выше, только в отношении скейла ( в конечной точке анимации
-                        итоговый скейл получается равным константе scaleRatio ;
-                    */
-                        if (animationRulesArray.includes("scale")) {
-                            transformRule += `scale(${
-                                1 +
-                                (deltaY / animationLenghtY) * (scaleRatio - 1)
-                            })`;
-                        }
-
-                        element.style.transform = transformRule;
-                    }
-                    if (animationRulesArray.includes("opacity")) {
-                        // см. коммент выше, только в отношении прозачности
-                        let opacity = deltaY / animationLenghtY;
-                        element.style.opacity = opacity;
-                    }
-                } else {
-                    resetStylesToInitValues(element);
-                }
                 if (isAnimationFinished) {
                     if (animationRulesArray.includes("fade-out")) {
                         let opacity = Math.abs(
@@ -168,6 +131,80 @@ define([], () => {
                             animationRulesArray
                         );
                     }
+                    return;
+                }
+                if (isStartAnimationPointReached) {
+                    deltaY =
+                        endPositionY > animationTreshold
+                            ? animationLenghtY -
+                              endPositionY +
+                              animationTreshold
+                            : Math.min(0, animationLenghtY + endPositionY);
+
+                    /*
+                        Коеффициент, на который множится дельта по  Y оси ( добавлен для того, чтобы в дальнейшем
+                        множить на него translateY значение, чтобы анимируемый элемент шел немного впереди скролла, а не линейно)
+                    */
+                    const deltaYRatio = 1.5;
+                    const multipliedDeltaY = Math.min(
+                        animationLenghtY,
+                        deltaY * deltaYRatio
+                    );
+
+                    /*
+                        (animationLenghtX * deltaY) / animationLenghtY - в итоге даёт процентную величину "завершенности" 
+                        анимации на основании этой величины можно рассчитывать deltaX для процентного смещения
+                        анимируемого элемента по оси X пропорционально пройденному растоянию по оси Y
+                        от начала до конца анимации. В итоге получается движение элемента по диагонали
+                    */
+                    deltaX =
+                        (animationLenghtX * multipliedDeltaY) /
+                        animationLenghtY;
+
+                    if (animationRulesArray.includes("translate")) {
+                        let transformRule;
+
+                        if (endPositionY > animationTreshold) {
+                            transformRule = `translate(${deltaX}px , ${multipliedDeltaY}px)`;
+                        } else if (endPositionY < 0) {
+                            transformRule = `translate(${
+                                isNaN(deltaX) ? 0 : deltaX
+                            }px , ${multipliedDeltaY}px)`;
+                        }
+
+                        /* 
+                            см. коммент выше, только в отношении скейла ( в конечной точке анимации
+                            итоговый скейл получается равным константе scaleRatio ;
+                        */
+                        if (animationRulesArray.includes("scale")) {
+                            transformRule += `scale(${
+                                1 +
+                                (deltaY / animationLenghtY) * (scaleRatio - 1)
+                            })`;
+                        }
+
+                        /* 
+                            см. коммент выше, только в отношении скейла к значению 1 из значения, заданного в
+                            константе scaleRatioReverse
+                        */
+                        if (animationRulesArray.includes("scale-reverse")) {
+                            transformRule += `scale(${
+                                scaleRationReverse - deltaY / animationLenghtY
+                            })`;
+                        }
+
+                        element.style.opacity = 1;
+                        element.style.marginRight = 0;
+
+                        element.style.transform = transformRule;
+                    }
+                    if (animationRulesArray.includes("opacity")) {
+                        // см. коммент выше, только в отношении прозачности
+                        let opacity = deltaY / animationLenghtY;
+                        element.style.opacity = opacity;
+                    }
+                } else {
+                    resetStylesToInitValues(element);
                 }
             }
 
@@ -178,7 +215,9 @@ define([], () => {
             });
         });
 
-        /* достаём из дата-атрибута правила анимации для текущего элемента, сплитим 
+        //=======================================================================================================
+
+        /* Достаём из дата-атрибута правила анимации для текущего элемента, сплитим 
             в массив, дабы не плодить кучу дата-атрибутов, но сохранить возможность в
             последующем добавлять/изменять кол-во/вид анимаций на странице с помощью
             дата-атрибутов в html без редактирования js кода
@@ -191,6 +230,7 @@ define([], () => {
             }
             return animationRules && animationRules.split(" ");
         }
+        //=======================================================================================================
 
         /*
             Функция для инициализации данных о текущих координатах анимируемого элемента в момент скролла
@@ -231,6 +271,7 @@ define([], () => {
                 animationLenghtY,
             };
         }
+        //=======================================================================================================
 
         /*
             Смещение элемента к "стандартному" положению.
@@ -240,6 +281,7 @@ define([], () => {
         function resetStylesToInitValues(element) {
             element.style = "";
         }
+        //=======================================================================================================
 
         /*
             Смещение элемента к "крайнему" положению анимации.
@@ -255,8 +297,12 @@ define([], () => {
                 case checkIsArrayIncludesRule(stylesArray, "fade-out"):
                     element.style.opacity = 0;
                     break;
+                case checkIsArrayIncludesRule(stylesArray, "opacity"):
+                    element.style.opacity = 1;
+                    break;
             }
         }
+        //=======================================================================================================
 
         /*
             Функция, которая вернёт true, если в переданном массиве есть нужная строка (добавил для того, чтобы 
@@ -265,5 +311,6 @@ define([], () => {
         function checkIsArrayIncludesRule(rulesArray, term) {
             return !!rulesArray.includes(term);
         }
+        //=======================================================================================================
     };
 });
