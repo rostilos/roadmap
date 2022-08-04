@@ -1,9 +1,11 @@
 .promo {
+    overflow-x: hidden;
     &__animated-section {
         background-color: @main-red;
         color: #fff;
         padding: 15vh 0;
-        @media screen and (max-width: @screen-md){
+        overflow-x: hidden;
+        @media screen and (max-width: @screen-md) {
             padding-top: 5vh;
         }
     }
@@ -12,14 +14,13 @@
     }
 }
 .animated-section {
-    &__container {
-        overflow-x: hidden;
-    }
 
     &__row {
         position: relative;
         grid-template-rows: 1fr;
+        margin-bottom: 20px;
         @media screen and (min-width: @screen-md) {
+            margin-bottom: 0;
             min-height: 50vh;
         }
         &:first-child {
@@ -58,7 +59,9 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                margin-top: 50vh;
+                @media screen and (min-width: @screen-md) {
+                    margin-top: 50vh;
+                }
             }
             .animated-section__text {
                 max-width: 500px;
@@ -70,7 +73,7 @@
 
     &__images {
         position: relative;
-        min-height: 450px;
+        min-height: 570px;
         @media screen and (max-width: @screen-md) {
             max-width: 250px;
             margin: 0 auto;
@@ -82,7 +85,7 @@
         top: 0;
         right: 20%;
         height: 40vh;
-        @media screen and (max-width: @screen-md){
+        @media screen and (max-width: @screen-md) {
             height: 50vh;
         }
         &--second {
@@ -102,15 +105,12 @@
         img {
             object-fit: contain;
             display: block;
-            width: 100%;
+            width: auto;
+            max-width: none;
             height: 100%;
-        }
-    }
-    &__image-placeholder {
-        &--iphone-front {
-            position: absolute;
-            top: 0;
-            width: 100%;
+            @media screen and (max-width: @screen-md) {
+                margin: 0 auto;
+            }
         }
     }
 
@@ -119,6 +119,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
         }
     }
 
@@ -163,6 +166,7 @@
     }
 }
 .bg-stripes {
+    pointer-events: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -170,80 +174,6 @@
     height: 100vh;
 }
 
-[data-animate-component]{
-    transition: all .2s linear;
-}
-[data-animate-container="bg-stripe-1"] {
-    &[data-animate-pos="start"] {
-        position: relative;
-        height: 100%;
-        [data-animate-component="bg-stripe-1"] {
-            height: 100%;
-            &:after {
-                content: "";
-                transform: rotate(340deg);
-                display: block;
-                position: absolute;
-                width: 120vw;
-                bottom: 0%;
-                left: -5%;
-                height: 1px;
-                background: rgba(255, 255, 255, 0.4);
-            }
-        }
-    }
-    &[data-animate-pos="end"] {
-        position: relative;
-        top: 0;
-    }
-}
-
-@keyframes arrow-translate {
-    0% {
-        transform: translateY(0);
-    }
-
-    40% {
-        transform: translateY(-50px);
-    }
-
-    100% {
-        transform: translateY(0);
-    }
-}
-[data-animate-container="iphone-back"] {
-    &[data-animate-pos="start"] {
-        &.animated-section__image-placeholder {
-            margin: 0 auto;
-            max-width: 250px;
-        }
-        @media screen and (max-width: @screen-md) {
-            width: 100vw;
-        }
-    }
-    &[data-animate-pos="end"] {
-        @media screen and (max-width: @screen-md) {
-            width: 250px;
-            margin: 0 auto;
-        }
-    }
-}
-[data-animate-component="iphone-back"] {
-    z-index: 25;
-}
-[data-animate-component="iphone-front"] {
-    z-index: 30;
-}
-[data-animate-container="iphone-front-2"][data-animate-pos="start"] {
-    min-height: 570px;
-}
-[data-animate-container="a14-icon"][data-animate-pos="end"]{
-    width: 220px;
-    height: 220px;
-    margin-bottom: 25px;
-}
-
-// =============================================================================================
 .promo-label {
     &__item {
         flex: 0 0 auto;
@@ -257,6 +187,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        z-index: @promo-label;
     }
 
     &__old-price {
@@ -276,15 +207,15 @@
         height: 70px;
         margin-left: 10px;
         margin-top: 40px;
+        z-index: unset;
     }
 
     &__icon {
+        max-width: 35px;
     }
 
     &__text {
-        font-size: 13px;
         text-align: center;
-        line-height: 1em;
     }
 }
 .promo-section {

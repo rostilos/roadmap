@@ -1,0 +1,105 @@
+
+
+@keyframes arrow-translate {
+    0% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-50px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+[data-animate-component="iphone-back"] {
+    z-index: @animation-element;
+}
+[data-animate-component="iphone-front"] {
+    z-index: @animation-element-overlay;
+}
+[data-animate-component] {
+    transition: all 0.2s linear;
+}
+
+[data-animate-container]{
+    pointer-events: none;
+}
+[data-animate-container="bg-stripe-1"] {
+    &[data-animate-pos="start"] {
+        position: relative;
+        height: 100%;
+        [data-animate-component="bg-stripe-1"] {
+            height: 100%;
+            &:after {
+                content: "";
+                transform: rotate(340deg);
+                display: block;
+                position: absolute;
+                width: 120vw;
+                bottom: 0%;
+                left: -5%;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.4);
+            }
+        }
+    }
+    &[data-animate-pos="end"] {
+        position: relative;
+        top: 0;
+    }
+}
+[data-animate-container="iphone-front"] {
+    &[data-animate-pos="end"] {
+        position: absolute;
+        top: -15vh;
+        width: 100%;
+        @media screen and (max-width: @screen-md){
+            top: -50vh;
+        }
+    }
+}
+[data-animate-container="iphone-back"] {
+    &[data-animate-pos="start"] {
+        &.animated-section__image-placeholder {
+            margin: 0 auto;
+            max-width: 250px;
+        }
+        @media screen and (max-width: @screen-md) {
+            width: 100vw;
+        }
+    }
+    &[data-animate-pos="end"] {
+        @media screen and (max-width: @screen-md) {
+            width: 250px;
+            margin: 0 auto;
+            transform: translateY(-250px);
+        }
+    }
+}
+[data-animate-container="iphone-front-2"] {
+    &[data-animate-pos="start"] {
+        min-height: 570px;
+        position: absolute;
+    }
+}
+[data-animate-container="a14-icon"] {
+    &[data-animate-pos="start"] {
+        @media screen and (max-width: @screen-sm) {
+            position: absolute;
+            top: -50vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            display: flex;
+            justify-content: center;
+        }
+    }
+    &[data-animate-pos="end"] {
+        width: 220px;
+        height: 220px;
+        margin-bottom: 25px;
+    }
+}
