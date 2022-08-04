@@ -2,8 +2,7 @@ var config = {
     map: {
         "*": {
             velocity: "js/vendors/velocity",
-            smoothScroll: "js/animations/smoothScroll.min",
-            smoothScrollConfig: "js/animations/smoothScrollConfig",
+            smoothScroll: "js/vendors/smoothScroll.min",
             promoAnimations: "js/animations/promo",
         },
     },

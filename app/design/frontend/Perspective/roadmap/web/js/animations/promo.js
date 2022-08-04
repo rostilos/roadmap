@@ -28,7 +28,6 @@ define([], () => {
         const animationTreshold = config.animationTreshold ?? 140;
         const scaleRatio = config.scaleRatio ?? 1.5;
         const scaleRationReverse = config.scaleRationReverse ?? 2;
-
         /*  
             Достаём из html разметки все элементы, которые являются конечными/начальными точками анимации
             для определённого элемента анимации. В дальнейшем перебираем полученную
@@ -68,10 +67,9 @@ define([], () => {
                 данные о и разнице в координатах между
                 текущим положением и общей "длиной" анимации.
             */
-
             let deltaY;
             let deltaX;
-
+            let timeout;
             /*
                 Правила анимации для текущего елемента
             */
@@ -97,12 +95,12 @@ define([], () => {
                     Константы для определения того, началась ли анимация, и завершилась ли анимация ( это нужно в дальнейшем для
                     понимания того, в какой момент начинать/заканчивать производить вычисления в изменениях стилей анимируемого элемента)
                 */
-                const isStartAnimationPointReached =
-                    startPositionY < animationTreshold;
-
-                const isAnimationFinished =
-                    endPositionY - animationTreshold < 0;
-
+                const isStartAnimationPointReached = startPositionY < animationTreshold;
+                
+                const isAnimationFinished = checkIsAnimationFinished(
+                    endPositionY,
+                    animationLenghtY
+                );
                 // =======================================================================================
                 if (isAnimationFinished) {
                     if (animationRulesArray.includes("fade-out")) {
@@ -113,18 +111,6 @@ define([], () => {
                             (animationTreshold - endPositionY) * -5
                         }px`;
                         element.style.opacity = opacity;
-                    } else if (
-                        animationRulesArray.includes("fade-in") &&
-                        endPositionY > 0
-                    ) {
-                        let opacity =
-                            (animationTreshold - Math.abs(endPositionY)) /
-                            animationTreshold;
-                        let right =
-                            (Math.abs(endPositionY) / animationTreshold) * 100;
-
-                        element.style.opacity = opacity < 0.15 ? 0 : opacity;
-                        element.style.transform = `translateX(-${right}%)`;
                     } else {
                         setExtremeAnimatedElPosition(
                             element,
@@ -134,20 +120,20 @@ define([], () => {
                     return;
                 }
                 if (isStartAnimationPointReached) {
+                    console.log(animationLenghtY,endPositionY, element);
                     deltaY =
-                        endPositionY > animationTreshold
+                        animationLenghtY >= 0
                             ? animationLenghtY -
                               endPositionY +
                               animationTreshold
-                            : Math.min(0, animationLenghtY + endPositionY);
-
+                            : Math.min(0 , -1 * (animationLenghtY - endPositionY + animationTreshold));
                     /*
                         Коеффициент, на который множится дельта по  Y оси ( добавлен для того, чтобы в дальнейшем
                         множить на него translateY значение, чтобы анимируемый элемент шел немного впереди скролла, а не линейно)
                     */
-                    const deltaYRatio = 1.5;
+                    const deltaYRatio = 1.3;
                     const multipliedDeltaY = Math.min(
-                        animationLenghtY,
+                        Math.abs(animationLenghtY),
                         deltaY * deltaYRatio
                     );
 
@@ -161,58 +147,69 @@ define([], () => {
                         (animationLenghtX * multipliedDeltaY) /
                         animationLenghtY;
 
+                    let transformRule = "";
+                    let opacityRule;
+                    
                     if (animationRulesArray.includes("translate")) {
-                        let transformRule;
-
-                        if (endPositionY > animationTreshold) {
-                            transformRule = `translate(${deltaX}px , ${multipliedDeltaY}px)`;
-                        } else if (endPositionY < 0) {
-                            transformRule = `translate(${
-                                isNaN(deltaX) ? 0 : deltaX
-                            }px , ${multipliedDeltaY}px)`;
-                        }
-
-                        /* 
-                            см. коммент выше, только в отношении скейла ( в конечной точке анимации
-                            итоговый скейл получается равным константе scaleRatio ;
-                        */
-                        if (animationRulesArray.includes("scale")) {
-                            transformRule += `scale(${
-                                1 +
-                                (deltaY / animationLenghtY) * (scaleRatio - 1)
-                            })`;
-                        }
-
-                        /* 
-                            см. коммент выше, только в отношении скейла к значению 1 из значения, заданного в
-                            константе scaleRatioReverse
-                        */
-                        if (animationRulesArray.includes("scale-reverse")) {
-                            transformRule += `scale(${
-                                scaleRationReverse - deltaY / animationLenghtY
-                            })`;
-                        }
-
-                        element.style.opacity = 1;
-                        element.style.marginRight = 0;
-
-                        element.style.transform = transformRule;
+                        transformRule = `translate(${
+                            isNaN(deltaX) ? 0 : deltaX
+                        }px , ${multipliedDeltaY}px)`;
+                    }
+                    if (animationRulesArray.includes("scale")) {
+                        transformRule += `scale(${
+                            1 + (deltaY / animationLenghtY) * (scaleRatio - 1)
+                        })`;
+                    }
+                    if (animationRulesArray.includes("scale-reverse")) {
+                        transformRule += `scale(${
+                            scaleRationReverse - deltaY / animationLenghtY
+                        })`;
                     }
                     if (animationRulesArray.includes("opacity")) {
                         // см. коммент выше, только в отношении прозачности
                         let opacity = deltaY / animationLenghtY;
-                        element.style.opacity = opacity;
+                        opacityRule = opacity;
                     }
+                    if (animationRulesArray.includes("fade-in")) {
+                        let opacity =
+                            (animationTreshold -
+                                (endPositionY - animationLenghtY)) /
+                            (animationTreshold * 2);
+                        let right = Math.max(
+                            ((endPositionY - animationLenghtY) /
+                                animationTreshold) *
+                                1000,
+                            0
+                        );
+                        opacityRule = opacity ?? 1;
+                        transformRule += `translateX(-${right}%)`;
+                    }
+                    
+                    element.style.marginRight = 0;
+                    element.style.opacity = opacityRule ?? 1;
+                    element.style.transform = transformRule;
                 } else {
                     resetStylesToInitValues(element);
                 }
+                if (window.scrollY < 50) {
+                    resetStylesToInitValues(element);
+                }
             }
-
             calculateStylesOnScroll();
 
-            window.addEventListener("scroll", function () {
-                calculateStylesOnScroll();
-            });
+            /*
+                Функция, которая позволяет исполнять функцию для рассчёта позиции анимируемых элементов при скроле только
+                перед отрисовкой следующего фрейма, чтобы не перегружать браузер большим кол-вом вычислений 
+            */
+            const debounceScrollHandler = function () {
+                if (timeout) {
+                    window.cancelAnimationFrame(timeout);
+                }
+                timeout = window.requestAnimationFrame(function () {
+                    calculateStylesOnScroll();
+                });
+            };
+            window.addEventListener("scroll", debounceScrollHandler);
         });
 
         //=======================================================================================================
@@ -259,8 +256,8 @@ define([], () => {
                     "end"
                 ].getBoundingClientRect().x;
 
-            const animationLenghtY = Math.abs(startPositionY - endPositionY);
-            const animationLenghtX = Math.abs(startPositionX - endPositionX);
+            const animationLenghtY = endPositionY - startPositionY;
+            const animationLenghtX = endPositionX - startPositionX;
 
             return {
                 startPositionY,
@@ -310,6 +307,21 @@ define([], () => {
         */
         function checkIsArrayIncludesRule(rulesArray, term) {
             return !!rulesArray.includes(term);
+        }
+        //=======================================================================================================
+
+        /*
+            Функция, которая вернёт булевое true, если анимация закончилась (в ф-цию аргументами передаются
+            конечные координаты и общая длина анимации по Y)
+        */
+        function checkIsAnimationFinished(endPositionY, animationLenghtY) {
+            if (animationLenghtY > 0 && endPositionY - animationTreshold < 0) {
+                return true;
+            }
+            if (animationLenghtY < 0 && endPositionY < animationLenghtY) {
+                return true;
+            }
+            return false;
         }
         //=======================================================================================================
     };

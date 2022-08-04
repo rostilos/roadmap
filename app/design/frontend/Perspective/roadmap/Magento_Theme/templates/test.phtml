@@ -1,10 +1,11 @@
-<div class="promo" data-mage-init='{"promoAnimations" : {"animationTreshold" : 140, "scaleRatio" : 1.5, "reverseScaleRatio" : 3}}'>
+<div class="promo" data-mage-init='{"promoAnimations" : {"animationTreshold" : 150, "scaleRatio" : 1.5, "reverseScaleRatio" : 3}}'>
     <section class="promo__animated-section animated-section" data-section="animate-section">
         <div class="animated-section__container _container">
             <div class="animated-section__row _grid-2-cols">
                 <div class="animated-section__images">
                     <!-- Конечная точка анимации при скролле для элемента iphone-front -->
-                    <div class="animated-section__image-placeholder animated-section__image-placeholder--iphone-front" data-animate-container="iphone-front" data-animate-pos="end"></div>
+                    <div data-animate-container="iphone-front" data-animate-pos="end"></div>
+                    <!-- Конечная точка анимации при скролле для элемента iphone-back -->
                     <div data-animate-container="iphone-back" data-animate-pos="start">
                         <div data-animate-component="iphone-back" data-animation-rules="translate scale fade-out" class="animated-section__image  ">
                             <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-back.png'); ?>" alt="iphone">
@@ -29,11 +30,13 @@
                     <div class="animated-section__labels promo-label">
                         <div class="promo-label__item">
                             <p class="promo-label__old-price">14 499 грн</p>
-                            <p class="promo-label__final-price">11 499 грн</p>
+                            <p class="promo-label__final-price">11 499 <span class="text-base">грн</span> </p>
                         </div>
                         <div class="promo-label__item promo-label__item--small">
-                            <div class="promo-label__icon"></div>
-                            <p class="promo-label__text">контракт на 12 мес</p>
+                            <div class="promo-label__icon">
+                                <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/handshake-icon.svg'); ?>" alt="handshake-icon">
+                            </div>
+                            <p class="promo-label__text text-xxs">контракт <br/> на 12 мес</p>
                         </div>
                     </div>
 
@@ -44,16 +47,15 @@
                 </div>
 
             </div>
-
-            <div class="animated-section__row _grid-2-cols" data-animate-container="iphone-front-2" data-animate-pos="end">
+            <!-- Начальная точка анимации при скролле для элемента iphone-front-2 -->
+            <div class="animated-section__row _grid-2-cols">
+                <div data-animate-container="iphone-front-2" data-animate-pos="start"></div>
                 <div class="animated-section__content">
                     <div class="animated-section__icon">
-                        <img src="" alt="">
                         <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/camera-shutter.svg'); ?>" alt="camera-shutter">
-
                     </div>
                     <h3 class="animated-section__title">Найкраща камера</h3>
-                    <p class="animated-section__text">Ширококутна камера 12 Мп з портретним режимом, портетним освітленням, функцією "Глибина", технологією Smart HRD нового поколыння ы пыдтримкою выдео 4К</p>
+                    <p class="animated-section__text">Ширококутна камера 12 Мп з портретним режимом, портетним освітленням, функцією "Глибина", технологією Smart HRD нового покоління і підтримкою відео 4К</p>
                 </div>
 
                 <div data-animate-container="iphone-back" data-animate-pos="end" class="animated-section__image-placeholder"></div>
@@ -61,8 +63,9 @@
 
             <div class="animated-section__row _grid-2-cols">
                 <div class="animated-section__images">
-                    <div data-animate-container="iphone-front-2" data-animate-pos="start">
-                        <div data-animate-component="iphone-front-2" data-animation-rules="translate fade-in" class="animated-section__image animated-section__image--iphone-front-2">
+                    <!-- Конечная точка анимации при скролле для элемента iphone-front-2 -->
+                    <div data-animate-container="iphone-front-2" data-animate-pos="end">
+                        <div data-animate-component="iphone-front-2" data-animation-rules="fade-in" class="animated-section__image animated-section__image--iphone-front-2">
                             <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-front.png'); ?>" alt="iphone">
                         </div>
                     </div>
@@ -78,11 +81,19 @@
             </div>
 
             <div class="animated-section__row animated-section__row--centered-content">
-
-                <div class="animated-section__content">
-                    <div class="animated-section__image">
+                <!-- Начальная точка анимации при скролле для элемента a14-icon -->
+                <div data-animate-container="a14-icon" data-animate-pos="start">
+                    <div class="animated-section__image animated-section__image--a14" 
+                         data-animate-component="a14-icon" 
+                         data-animation-rules="opacity translate scale-reverse"
+                    >
                         <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/A14-Bionic.png'); ?>" alt="camera-shutter" />
                     </div>
+                </div>
+
+                <div class="animated-section__content">
+                    <!-- Конечная точка анимации при скролле для элемента a14-icon -->
+                    <div data-animate-container="a14-icon" data-animate-pos="end"></div>
                     <h3 class="animated-section__title">
                         Потужний процесор BIONIC 14
                     </h3>
