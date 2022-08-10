@@ -1,0 +1,52 @@
+.footer-promo {
+    background-color: @main-red;
+    color: #fff;
+    padding: 80px 0;
+    @media screen and (max-width: @screen-lg) {
+        padding: 60px 0;
+    }
+    @media screen and (max-width: @screen-md) {
+        padding: 40px 0;
+    }
+    &__content {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 60px;
+
+        @media screen and(min-width: @screen-xlg) {
+            column-gap: 80px;
+        }
+        @media screen and (max-width: @screen-lg) {
+            display: block;
+        }
+    }
+
+    &__offer {
+        @media screen and (max-width: @screen-lg) {
+            margin-bottom: 20px;
+        }
+    }
+}
+.footer-offer {
+    &__header {
+        @media screen and (min-width: @screen-lg) {
+            display: flex;
+            align-items: center;
+        }
+        margin-bottom: 0.75em;
+    }
+
+    &__icon {
+        flex-shrink: 0;
+        @media screen and (min-width: @screen-lg) {
+            margin-right: 15px;
+        }
+    }
+
+    &__content {
+    }
+}
+.footer-offet {
+    &__title {
+    }
+}

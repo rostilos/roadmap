@@ -10,6 +10,8 @@
     <referenceContainer name="main.content" htmlClass="blank"/>
     <referenceContainer name="footer" remove="true"/>
     <referenceBlock name="form.subscribe" remove="true"/>
+    <referenceContainer name="main" remove="true"/>
+
 
     <referenceContainer name="footer-container">
         <block class="Magento\Framework\View\Element\Template" name="promo-footer" template="Magento_Theme::html/footer_promo.phtml" after="-"/>
