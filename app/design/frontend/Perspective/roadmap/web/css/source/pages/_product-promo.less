@@ -153,9 +153,9 @@
         margin-bottom: 1rem;
     }
 
-    &__sub-title {
+    &__icon {
+        margin-bottom: 1rem;
     }
-
     &__labels {
         display: flex;
         justify-content: start;
@@ -195,8 +195,8 @@
 .promo-label {
     &__item {
         flex: 0 0 auto;
-        width: 85px;
-        height: 85px;
+        width: 150px;
+        height: 150px;
         display: block;
         border-radius: 50%;
         background-color: @main-violet;
@@ -206,34 +206,35 @@
         justify-content: center;
         align-items: center;
         z-index: @promo-label;
+        @media screen and (max-width: @screen-md) {
+            width: 120px;
+            height: 120px;
+        }
     }
 
     &__old-price {
-        font-size: 14px;
         text-decoration: line-through;
     }
 
     &__final-price {
-        font-weight: bold;
-        font-size: 20px;
-        line-height: 1em;
         text-align: center;
     }
 
     &__item--small {
-        width: 70px;
-        height: 70px;
+        width: 110px;
+        height: 110px;
         margin-left: 10px;
         margin-top: 40px;
         z-index: unset;
-    }
-
-    &__icon {
-        max-width: 35px;
+        @media screen and (max-width: @screen-md) {
+            width: 85px;
+            height: 85px;
+        }
     }
 
     &__text {
         text-align: center;
+        line-height: 1em;
     }
 }
 .promo-section {
