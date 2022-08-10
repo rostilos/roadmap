@@ -33,22 +33,22 @@ define([], () => {
             для определённого элемента анимации. В дальнейшем перебираем полученную
             коллекцию элементов, преобразованную в массив.
             С помощью деструктуризации вытаскиваем из датасета заранее заданные значения дата-атрибутов 
-            animateContainer, animatePos, и выставляем их в кач-ве ключей объекта animatedElementsPositions, значение
+            animatePoint, animatePos, и выставляем их в кач-ве ключей объекта animatedElementsPositions, значение
             по ключу - ссылка на html элемент, который выступает в кач-ве конечной/начальной точки анимации.
         */
-        const animatedElementsContainers = document.querySelectorAll(
-            "[data-animate-container]"
+        const animatedElementsPoints = document.querySelectorAll(
+            "[data-animate-point]"
         );
         let animatedElementsPositions = {};
 
-        Array.from(animatedElementsContainers).forEach((element) => {
-            const { animateContainer, animatePos } = element.dataset;
+        Array.from(animatedElementsPoints).forEach((element) => {
+            const { animatePoint, animatePos } = element.dataset;
 
-            if (!animatedElementsPositions.hasOwnProperty(animateContainer)) {
-                animatedElementsPositions[animateContainer] = {};
+            if (!animatedElementsPositions.hasOwnProperty(animatePoint)) {
+                animatedElementsPositions[animatePoint] = {};
             }
 
-            animatedElementsPositions[animateContainer][animatePos] = element;
+            animatedElementsPositions[animatePoint][animatePos] = element;
         });
         //=======================================================================================================
 
@@ -62,6 +62,7 @@ define([], () => {
             "[data-animate-component]"
         );
         Array.from(animatedElements).forEach((element) => {
+            let timeout;
             /*
                 Объявление переменных, которые в последующем будут содержать
                 данные о и разнице в координатах между
@@ -69,7 +70,6 @@ define([], () => {
             */
             let deltaY;
             let deltaX;
-            let timeout;
             /*
                 Правила анимации для текущего елемента
             */
@@ -95,8 +95,13 @@ define([], () => {
                     Константы для определения того, началась ли анимация, и завершилась ли анимация ( это нужно в дальнейшем для
                     понимания того, в какой момент начинать/заканчивать производить вычисления в изменениях стилей анимируемого элемента)
                 */
-                const isStartAnimationPointReached = startPositionY < animationTreshold;
-                
+                const isStartAnimationPointReached = checkIsAnimationStarted(
+                    animationLenghtY,
+                    startPositionY,
+                    endPositionY,
+                    animationTreshold
+                );
+
                 const isAnimationFinished = checkIsAnimationFinished(
                     endPositionY,
                     animationLenghtY
@@ -120,13 +125,13 @@ define([], () => {
                     return;
                 }
                 if (isStartAnimationPointReached) {
-                    console.log(animationLenghtY,endPositionY, element);
                     deltaY =
                         animationLenghtY >= 0
                             ? animationLenghtY -
                               endPositionY +
                               animationTreshold
-                            : Math.min(0 , -1 * (animationLenghtY - endPositionY + animationTreshold));
+                            : Math.min(0, -Math.abs(endPositionY));
+
                     /*
                         Коеффициент, на который множится дельта по  Y оси ( добавлен для того, чтобы в дальнейшем
                         множить на него translateY значение, чтобы анимируемый элемент шел немного впереди скролла, а не линейно)
@@ -149,7 +154,7 @@ define([], () => {
 
                     let transformRule = "";
                     let opacityRule;
-                    
+
                     if (animationRulesArray.includes("translate")) {
                         transformRule = `translate(${
                             isNaN(deltaX) ? 0 : deltaX
@@ -184,7 +189,7 @@ define([], () => {
                         opacityRule = opacity ?? 1;
                         transformRule += `translateX(-${right}%)`;
                     }
-                    
+
                     element.style.marginRight = 0;
                     element.style.opacity = opacityRule ?? 1;
                     element.style.transform = transformRule;
@@ -232,7 +237,6 @@ define([], () => {
         /*
             Функция для инициализации данных о текущих координатах анимируемого элемента в момент скролла
         */
-
         function calculatePosValues(element) {
             const { animateComponent } = element.dataset;
             /* 
@@ -324,5 +328,24 @@ define([], () => {
             return false;
         }
         //=======================================================================================================
+
+        /*
+            Функция, которая вернёт булевое true, если анимация началась 
+        */
+        function checkIsAnimationStarted(
+            animationLenghtY,
+            startPositionY,
+            endPositionY,
+            animationTreshold
+        ) {
+            if (animationLenghtY > 0 && startPositionY < animationTreshold) {
+                return true;
+            }
+            if (animationLenghtY < 0 && endPositionY < 0) {
+                return true;
+            }
+            return false;
+        }
+        //======================================================================================================
     };
 });
