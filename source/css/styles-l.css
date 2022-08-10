@@ -3999,6 +3999,7 @@ h6 {
 .bg-stripes {
   pointer-events: none;
   position: absolute;
+  overflow-x: clip;
   top: 0;
   left: 0;
   width: 100vw;
