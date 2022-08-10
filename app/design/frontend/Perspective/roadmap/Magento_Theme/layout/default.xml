@@ -8,4 +8,10 @@
 <page layout="1column"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <referenceContainer name="main.content" htmlClass="blank"/>
+    <referenceContainer name="footer" remove="true"/>
+    <referenceBlock name="form.subscribe" remove="true"/>
+
+    <referenceContainer name="footer-container">
+        <block class="Magento\Framework\View\Element\Template" name="promo-footer" template="Magento_Theme::html/footer_promo.phtml" after="-"/>
+    </referenceContainer>
 </page>
