@@ -1,5 +1,3 @@
-
-
 @keyframes arrow-translate {
     0% {
         transform: translateY(0);
@@ -14,54 +12,101 @@
     }
 }
 
+// Стили для конпонентов анимации
 [data-animate-component="iphone-back"] {
+    img{
+        @media screen and (min-width: @screen-md) {
+            min-height: 500px;
+        }
+    }
     z-index: @animation-element;
 }
 [data-animate-component="iphone-front"] {
+    img{
+        @media screen and (min-width: @screen-md) {
+            min-height: 500px;
+        }
+    }
     z-index: @animation-element-overlay;
+}
+[data-animate-component="bg-stripe-1"] {
+    position: relative;
+    height: 100%;
+}
+[data-animate-component="bg-stripe-1"] {
+    height: 100%;
+    &:after {
+        content: "";
+        transform: rotate(340deg);
+        display: block;
+        position: absolute;
+        width: 120vw;
+        bottom: 0%;
+        left: -5%;
+        height: 50px;
+        background-repeat: repeat-x;
+        background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg viewBox='5.873 0 598.083 31.312' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient gradientUnits='userSpaceOnUse' x1='0%25' y1='0%25' x2='0%25' y2='100%25' id='gradient-0'%3E%3Cstop offset='0' style='stop-color: rgba(255, 255, 255, 0)'/%3E%3Cstop offset='0.2' style='stop-color: rgba(204, 204, 204, 0.05)'/%3E%3Cstop offset='0.4' style='stop-color: rgba(204, 204, 204, 0.1)'/%3E%3Cstop offset='0.6' style='stop-color: rgba(204, 204, 204, 0.15)'/%3E%3Cstop offset='0.99' style='stop-color: rgba(204, 204, 204, 0.35)'/%3E%3Cstop offset='1' style='stop-color: rgba(204, 204, 204, 1)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cline style='stroke-width: 36px; stroke: url(%23gradient-0);' x1='3.58' y1='30.201' x2='603.825' y2='30.2'/%3E%3C/svg%3E");
+    }
+}
+[data-animate-component="bg-stripe-2"] {
+    height: 100%;
+    position: relative;
+    &:after {
+        content: "";
+        transform: rotate(20deg);
+        display: block;
+        position: absolute;
+        width: 120vw;
+        bottom: 0%;
+        left: -5%;
+        height: 50px;
+        background-repeat: repeat-x;
+        background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg viewBox='5.873 0 598.083 31.312' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient gradientUnits='userSpaceOnUse' x1='0%25' y1='0%25' x2='0%25' y2='100%25' id='gradient-0'%3E%3Cstop offset='0' style='stop-color: rgba(255, 255, 255, 0)'/%3E%3Cstop offset='0.2' style='stop-color: rgba(204, 204, 204, 0.05)'/%3E%3Cstop offset='0.4' style='stop-color: rgba(204, 204, 204, 0.1)'/%3E%3Cstop offset='0.6' style='stop-color: rgba(204, 204, 204, 0.15)'/%3E%3Cstop offset='0.99' style='stop-color: rgba(204, 204, 204, 0.35)'/%3E%3Cstop offset='1' style='stop-color: rgba(204, 204, 204, 1)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cline style='stroke-width: 36px; stroke: url(%23gradient-0);' x1='3.58' y1='30.201' x2='603.825' y2='30.2'/%3E%3C/svg%3E");
+    }
+}
+[data-animate-component="bg-stripe-1"],[data-animate-component="bg-stripe-2"]{
+    z-index: 1;
 }
 [data-animate-component] {
     transition: all 0.2s linear;
 }
 
-[data-animate-container]{
+
+// Стили для задания начальной/конечной точки анимации в соответствии с положением
+// конкретного элемента в DOM дереве ( в основном используется абсолютное позиционирование ).
+[data-animate-point] {
     pointer-events: none;
 }
-[data-animate-container="bg-stripe-1"] {
+[data-animate-point="bg-stripe-1"]{
     &[data-animate-pos="start"] {
-        position: relative;
-        height: 100%;
-        [data-animate-component="bg-stripe-1"] {
-            height: 100%;
-            &:after {
-                content: "";
-                transform: rotate(340deg);
-                display: block;
-                position: absolute;
-                width: 120vw;
-                bottom: 0%;
-                left: -5%;
-                height: 1px;
-                background: rgba(255, 255, 255, 0.4);
-            }
-        }
+        bottom: 0;
     }
     &[data-animate-pos="end"] {
         position: relative;
         top: 0;
     }
 }
-[data-animate-container="iphone-front"] {
+[data-animate-point="bg-stripe-2"] {
+    &[data-animate-pos="start"] {
+        position: absolute;
+        top: 150vh;
+    }
+    &[data-animate-pos="end"] {
+        position: absolute;
+        top: 50vh;
+    }
+}
+[data-animate-point="iphone-front"] {
     &[data-animate-pos="end"] {
         position: absolute;
         top: -15vh;
         width: 100%;
-        @media screen and (max-width: @screen-md){
+        @media screen and (max-width: @screen-md) {
             top: -50vh;
         }
     }
 }
-[data-animate-container="iphone-back"] {
+[data-animate-point="iphone-back"] {
     &[data-animate-pos="start"] {
         &.animated-section__image-placeholder {
             margin: 0 auto;
@@ -79,13 +124,13 @@
         }
     }
 }
-[data-animate-container="iphone-front-2"] {
+[data-animate-point="iphone-front-2"] {
     &[data-animate-pos="start"] {
         min-height: 570px;
         position: absolute;
     }
 }
-[data-animate-container="a14-icon"] {
+[data-animate-point="a14-icon"] {
     &[data-animate-pos="start"] {
         @media screen and (max-width: @screen-sm) {
             position: absolute;

@@ -1,18 +1,25 @@
-<div class="promo" data-mage-init='{"promoAnimations" : {"animationTreshold" : 150, "scaleRatio" : 1.5, "reverseScaleRatio" : 3}}'>
+<div class="footer-promo" data-mage-init=
+          '{"scrollAnimations" : {
+                "animationTreshold" : 150, 
+                "scaleRatio" : 1.5, 
+                "reverseScaleRatio" : 3
+            },
+            "promoPage" : {}
+        }'>
     <section class="promo__animated-section animated-section" data-section="animate-section">
         <div class="animated-section__container _container">
             <div class="animated-section__row _grid-2-cols">
                 <div class="animated-section__images">
                     <!-- Конечная точка анимации при скролле для элемента iphone-front -->
-                    <div data-animate-container="iphone-front" data-animate-pos="end"></div>
-                    <!-- Конечная точка анимации при скролле для элемента iphone-back -->
-                    <div data-animate-container="iphone-back" data-animate-pos="start">
+                    <div data-animate-point="iphone-front" data-animate-pos="end"></div>
+                    <!-- Начальная точка анимации при скролле для элемента iphone-back -->
+                    <div data-animate-point="iphone-back" data-animate-pos="start">
                         <div data-animate-component="iphone-back" data-animation-rules="translate scale fade-out" class="animated-section__image  ">
                             <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-back.png'); ?>" alt="iphone">
                         </div>
                     </div>
                     <!-- Начальная точка анимации при скролле для элемента iphone-front -->
-                    <div data-animate-container="iphone-front" data-animate-pos="start">
+                    <div data-animate-point="iphone-front" data-animate-pos="start">
                         <div data-animate-component="iphone-front" data-animation-rules="translate" class="animated-section__image animated-section__image--second">
                             <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-front.png'); ?>" alt="iphone">
                         </div>
@@ -36,7 +43,7 @@
                             <div class="promo-label__icon">
                                 <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/handshake-icon.svg'); ?>" alt="handshake-icon">
                             </div>
-                            <p class="promo-label__text text-xxs">контракт <br/> на 12 мес</p>
+                            <p class="promo-label__text text-xxs">контракт <br /> на 12 мес</p>
                         </div>
                     </div>
 
@@ -47,9 +54,10 @@
                 </div>
 
             </div>
-            <!-- Начальная точка анимации при скролле для элемента iphone-front-2 -->
+            
             <div class="animated-section__row _grid-2-cols">
-                <div data-animate-container="iphone-front-2" data-animate-pos="start"></div>
+                <!-- Начальная точка анимации при скролле для элемента iphone-front-2 -->
+                <div data-animate-point="iphone-front-2" data-animate-pos="start"></div>
                 <div class="animated-section__content">
                     <div class="animated-section__icon">
                         <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/camera-shutter.svg'); ?>" alt="camera-shutter">
@@ -58,13 +66,14 @@
                     <p class="animated-section__text">Ширококутна камера 12 Мп з портретним режимом, портетним освітленням, функцією "Глибина", технологією Smart HRD нового покоління і підтримкою відео 4К</p>
                 </div>
 
-                <div data-animate-container="iphone-back" data-animate-pos="end" class="animated-section__image-placeholder"></div>
+                <!-- Конечная точка анимации при скролле для элемента iphone-back -->
+                <div data-animate-point="iphone-back" data-animate-pos="end" class="animated-section__image-placeholder"></div>
             </div>
 
             <div class="animated-section__row _grid-2-cols">
                 <div class="animated-section__images">
                     <!-- Конечная точка анимации при скролле для элемента iphone-front-2 -->
-                    <div data-animate-container="iphone-front-2" data-animate-pos="end">
+                    <div data-animate-point="iphone-front-2" data-animate-pos="end">
                         <div data-animate-component="iphone-front-2" data-animation-rules="fade-in" class="animated-section__image animated-section__image--iphone-front-2">
                             <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/iphone-front.png'); ?>" alt="iphone">
                         </div>
@@ -82,18 +91,15 @@
 
             <div class="animated-section__row animated-section__row--centered-content">
                 <!-- Начальная точка анимации при скролле для элемента a14-icon -->
-                <div data-animate-container="a14-icon" data-animate-pos="start">
-                    <div class="animated-section__image animated-section__image--a14" 
-                         data-animate-component="a14-icon" 
-                         data-animation-rules="opacity translate scale-reverse"
-                    >
+                <div data-animate-point="a14-icon" data-animate-pos="start">
+                    <div class="animated-section__image animated-section__image--a14" data-animate-component="a14-icon" data-animation-rules="opacity translate scale-reverse">
                         <img loading="lazy" src="<?php echo $this->getViewFileUrl('images/iphone-promo/A14-Bionic.png'); ?>" alt="camera-shutter" />
                     </div>
                 </div>
 
                 <div class="animated-section__content">
                     <!-- Конечная точка анимации при скролле для элемента a14-icon -->
-                    <div data-animate-container="a14-icon" data-animate-pos="end"></div>
+                    <div data-animate-point="a14-icon" data-animate-pos="end"></div>
                     <h3 class="animated-section__title">
                         Потужний процесор BIONIC 14
                     </h3>
@@ -108,44 +114,95 @@
     <section class="promo__section promo-section">
         <div class="promo-section__container _container">
             <div class="promo-section__body">
-                <h3 class="promo-section__title">Смотрите подробные характеристики</h3>
+                <h3 class="promo-section__title text-3xl">Дивіться детальні характеристики</h3>
                 <div class="promo-section__specifications product-specifications">
-                    <div class="product-specifications__table specifications-table">
-                        <h5 class="specifications-table__title"></h5>
+                    <div class="product-specifications__table specifications-table" data-role="collapsible-content">
+                        <h5 class="specifications-table__title text-base font-semibold">Стандарт зв'язку/інтернет</h5>
                         <div class="specifications-table__item">
-                            <div class="specifications-table__row">
-                                <p>test</p>
-                                <p>test</p>
-                            </div>
-                            <div class="specifications-table__row">
-                                <p>test</p>
-                                <p>test</p>
+                            <div class="specifications-table__row text-sm">
+                                <p>Стандарт зв'язку</p>
+                                <p>2G (GPRS/EDGE),3G (WCDMA/UMTS/HSPA),4G (LTE)</p>
                             </div>
                         </div>
-                        <h5 class="specifications-table__title"></h5>
+                        <h5 class="specifications-table__title text-base font-semibold">Дисплей</h5>
                         <div class="specifications-table__item">
-                            <div class="specifications-table__row">
-                                <p>test</p>
-                                <p>test</p>
+                            <div class="specifications-table__row text-sm">
+                                <p>Діагональ екрана</p>
+                                <p>6.1</p>
                             </div>
-                            <div class="specifications-table__row">
-                                <p>test</p>
-                                <p>test</p>
+                            <div class="specifications-table__row text-sm">
+                                <p>Роздільна здатність дисплея</p>
+                                <p>1792 x 828</p>
                             </div>
-                            <div class="specifications-table__row">
-                                <p>test</p>
-                                <p>test</p>
+                            <div class="specifications-table__row text-sm">
+                                <p>Тип матриці</p>
+                                <p>IPS</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Кількість точок дотику</p>
+                                <p>10</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Матеріал екрана</p>
+                                <p>Скло</p>
                             </div>
                         </div>
-                        <h5 class="specifications-table__title"></h5>
+                        <h5 class="specifications-table__title text-base font-semibold">СІМ-картки</h5>
                         <div class="specifications-table__item">
-                            <div class="specifications-table__row">
-                                <p>test</p>
-                                <p>test</p>
+                            <div class="specifications-table__row text-sm">
+                                <p>Кількість SIM-карток</p>
+                                <p>1</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Розміри СІМ-картки</p>
+                                <p>Nano-SIM</p>
                             </div>
                         </div>
-                    </div>
+                        <h5 class="specifications-table__title text-base font-semibold">Функції пам'яті</h5>
+                        <div class="specifications-table__item">
+                            <div class="specifications-table__row text-sm">
+                                <p>Оперативна пам'ять</p>
+                                <p>4 ГБ</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Вбудована пам'ять</p>
+                                <p>64 ГБ</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Максимальний обсяг підтримуваної карти пам'яті</p>
+                                <p>Немає</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Кількість контактів у телефонній книзі</p>
+                                <p>Обмежено пам'яттю самого пристрою</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Кількість номерів на 1 контакт</p>
+                                <p>Обмежено пам'яттю самого пристрою</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Кількість символів у назві контакту</p>
+                                <p>Обмежено пам'яттю самого пристрою</p>
+                            </div>
+                            <div class="specifications-table__row text-sm">
+                                <p>Комбінований слот</p>
+                                <p>Немає</p>
+                            </div>
+                        </div>
+                        <h5 class="specifications-table__title text-base font-semibold">Операційна система</h5>
+                        <div class="specifications-table__item">
+                            <div class="specifications-table__row text-sm">
+                                <p>Операційна система</p>
+                                <p>iOS</p>
+                            </div>
+                        </div>
+                        <div class="specifications-table__content-overlay">
+                            <button class="specifications-table__button _button" data-role="show-all-btn">
+                                Переглянути усі характеристики
+                            </button>
+                        </div>
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -154,12 +211,20 @@
     <!-- Диагональные полосы на заднем фоне, которые в дальнейшем анимируются при скролле -->
     <div class="bg-stripes">
         <!-- Конечная точка анимации при скролле для элемента bg-stripe-1 -->
-        <div class="bg-stripe-1" data-animate-container="bg-stripe-1" data-animate-pos="end">
+        <div class="bg-stripe-1" data-animate-point="bg-stripe-1" data-animate-pos="end">
 
         </div>
-        <!-- Начальная точка анимации при скролле для элемента bg-stripe-1 -->
-        <div class="bg-stripe-1" data-animate-container="bg-stripe-1" data-animate-pos="start">
             <div data-animate-component="bg-stripe-1" data-animation-rules="translate"></div>
+        <!-- Начальная точка анимации при скролле для элемента bg-stripe-1 -->
+        <div data-animate-point="bg-stripe-1" data-animate-pos="start"></div>
+
+        <!-- Конечная точка анимации при скролле для элемента bg-stripe-2 -->
+        <div class="bg-stripe-2" data-animate-point="bg-stripe-2" data-animate-pos="end">
+
         </div>
+            <div data-animate-component="bg-stripe-2" data-animation-rules="translate"></div>
+        <!-- Начальная точка анимации при скролле для элемента bg-stripe-2 -->
+        <div data-animate-point="bg-stripe-2" data-animate-pos="start"></div>
     </div>
+
 </div>
